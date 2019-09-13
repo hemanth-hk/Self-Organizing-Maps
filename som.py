@@ -1,8 +1,25 @@
+
+
+#										#
+# SOM Algorithm							#
+# author : hemanth-hk aka runtimeTerror #
+# language : python						#
+# Pakages required : numpy				#
+#										#
+
+# importing pakages
 import numpy as np
 import random
 
-no_of_in = input("Enter the number of input units: ")
-no_of_in = int(no_of_in)
+no_of_in = input("Enter the number of input units: ") # number of input units
+no_of_in = int(no_of_in) # converting string to int
+
+no_of_out = 2 # no of output units
+
+d1 = d2 = 0 # Distance of input units from the output units
+
+alpha = input("Enter the learing rate: ") # Learning rate
+alpha = float(alpha)
 
 check = input("Do you want to enter the individual values of the inputs (y/n): ")
 
@@ -13,17 +30,14 @@ if check == 'y':
 	mat = np.array(values).reshape(no_of_in,no_of_in)
 	print(mat)
 else:
+	# generating random array
 	mat = np.random.rand(no_of_in,no_of_in)
 	print("The array of inputs is\n")
 	print(mat)
 	print("\n")
 
-no_of_out = 2
-d1 = d2 = 0
-alpha = input("Enter the learing rate: ")
-alpha = float(alpha)
 
-M = np.random.rand(no_of_in,no_of_out)
+M = np.random.rand(no_of_in,no_of_out) # Matrix of weights for the 2 output units
 print("The initial array of weights:\n")
 print(M)
 print("\n")
