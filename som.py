@@ -1,12 +1,3 @@
-
-
-#										#
-# SOM Algorithm							#
-# author : hemanth-hk aka runtimeTerror #
-# language : python						#
-# Pakages required : numpy				#
-#										#
-
 # importing pakages
 import numpy as np
 import random
@@ -14,9 +5,16 @@ import random
 no_of_in = input("Enter the number of input units: ") # number of input units
 no_of_in = int(no_of_in) # converting string to int
 
-no_of_out = 2 # no of output units
+while 1:
+	no_of_out = int(input("Enter the number of output units: ")) # no of output units
+	if no_of_out > no_of_in:
+		print('Your number of output(s) are more than the number of input(s)')
+		continue
+	else:
+		break
 
-d1 = d2 = 0 # Distance of input units from the output units
+dis = list(np.zeros(no_of_out, dtype = float))  # Distance of input units from the output units
+dis_temp = list(np.zeros(no_of_out, dtype = float))
 
 alpha = input("Enter the learing rate: ") # Learning rate
 alpha = float(alpha)
@@ -42,33 +40,47 @@ print("The initial array of weights:\n")
 print(M)
 print("\n")
 
+# Copy of M
+M_temp = np.copy(M)
+
 #calculating the euclid distance and updating weights
-for u in range(0,no_of_in):
-	print("Calculating for input unit",u+1)
-	for ind,val in zip(range(0,no_of_in),mat[u]):
-		d1 = d1 + ((val - M[ind][0])*(val - M[ind][0]))
-	for ind,val in zip(range(0,no_of_in),mat[u]):
-		d2 = d2 + ((val - M[ind][1])*(val - M[ind][1]))
+count = 1
+while 1:
+	for u in range(0,no_of_in):
+		#print("Calculating for input unit",u+1)
+		for s in range(0,no_of_out):
+			for ind,val in zip(range(0,no_of_in),mat[u]):
+				dis[s] = dis[s] + ((val - M[ind][s])*(val - M[ind][s]))
+				dis_temp[s] = dis_temp[s] + ((val - M[ind][s])*(val - M[ind][s]))
+			#print('Distance' + str(s+1) + ' = ' + str(dis[s]))
 
-	print("D1:",d1)
-	print("D2:",d2)
+		dis_temp.sort()
 
-	if d1 > d2:
-		print("Unit 2 is less")
+
+		#print("Distance from unit {} is less".format(dis.index(dis_temp[0])))
 		for ind,val in zip(range(0,no_of_in),mat[u]):
-			M[ind][1] = M[ind][1] + alpha * (val - M[ind][1])
-	else:
-		print("Unit 1 is less")
-		for ind,val in zip(range(0,no_of_in),mat[u]):
-			M[ind][0] = M[ind][0] + alpha * (val - M[ind][0])
+			M[ind][dis.index(dis_temp[0])] = M[ind][dis.index(dis_temp[0])] + alpha * (val - M[ind][dis.index(dis_temp[0])])
 
-	print("After unit",u+1)
+
+		#print("After unit",u+1)
+		dis_temp = list(np.zeros(no_of_out, dtype = float))
+		dis = list(np.zeros(no_of_out, dtype = float))
+	print('\n')
+	print("After Iteration number: {}".format(count))
+	print("Present array:")
 	print(M)
-	d1 = d2 = 0
+	print('\n')
+	print("Previous array:")
+	print(M_temp)
+	if np.array_equal(M_temp,M):
+		break
+	count = count + 1
+	M_temp = np.copy(M)
+
 
 print("\n")
 print("==============================")
-print("After all the updates are done:")
+print("After all the updates are done:\n")
 print("Input array\n")
 print(mat)
 print("\n")
@@ -79,18 +91,20 @@ print("==============================")
 
 
 #printing cluster values
-print("Results:")
+print("Results:\n\n")
+
 for u in range(0,no_of_in):
-	for ind,val in zip(range(0,no_of_in),mat[u]):
-		d1 = d1 + ((val - M[ind][0])*(val - M[ind][0]))
-	for ind,val in zip(range(0,no_of_in),mat[u]):
-		d2 = d2 + ((val - M[ind][1])*(val - M[ind][1]))
+	for s in range(0,no_of_out):
+		for ind,val in zip(range(0,no_of_in),mat[u]):
+			dis[s] = dis[s] + ((val - M[ind][s])*(val - M[ind][s]))
+			dis_temp[s] = dis_temp[s] + ((val - M[ind][s])*(val - M[ind][s]))
 
-	if d1 > d2:
-		res = "Unit " + str(u+1) + " belongs to 1st output cluster"
-		print(res)
+	dis_temp.sort(reverse=True)
 
-	else:
-		res = "Unit " + str(u+1) + " belongs to 2nd output cluster"
-		print(res)
-	d1 = d2 = 0
+	res = 'Unit ' + str(u+1) + ' belongs to cluster: ' + str(dis.index(dis_temp[0]) + 1)
+
+	print(res)
+
+
+	dis_temp = list(np.zeros(no_of_out, dtype = float))
+	dis = list(np.zeros(no_of_out, dtype = float))
