@@ -1,4 +1,4 @@
-# importing pakages
+# importing numpy and pandas
 import numpy as np
 import random
 
